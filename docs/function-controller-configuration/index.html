@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<!-- Head information -->
+<head>
+<meta charset='utf-8'>
+<meta content='width=device-width' initial-scale='1' name='viewport'>
+<!-- Always force latest IE rendering engine or request Chrome Frame -->
+<!-- %meta{content: 'IE=edge,chrome=1', http-equiv: 'X-UA-Compatible'} -->
+<link href='/assets/images/favicon/favicon-196x196.png' rel='icon' sizes='196x196' type='image/png'>
+<link href='/assets/images/favicon/favicon-32x32.png' rel='icon' sizes='32x32' type='image/png'>
+<link href='/assets/images/favicon/favicon-16x16.png' rel='icon' sizes='16x16' type='image/png'>
+<link href='/assets/images/favicon/favicon-128.png' rel='icon' sizes='128x128' type='image/png'>
+<link href='/assets/images/favicon/favicon.ico' rel='icon'>
+<!-- Use title if it's in the page YAML frontmatter -->
+<title>
+Kubeless
+</title>
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css' media='screen' rel='stylesheet'>
+<!-- Bitnami Design System -->
+<link href='https://fonts.googleapis.com/css?family=Fira+Sans:300,400,700|Hind:300,400' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.components.min.css' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.min.css' media='screen' rel='stylesheet'>
+<!-- Include the javascripts and the styles of the page -->
+<link href="/assets/stylesheets/main.css" rel="stylesheet" />
+<script src="/assets/javascripts/main.js"></script>
+</head>
+
+<!-- Main content -->
+<body>
+<div class='gradient-135-accent elevation-1'>
+<div class='container'>
+<header class='Header padding-v-big'>
+<div class='row collapse-b-tablet align-center'>
+<div class='col-4'>
+<div class='Header__Logo'>
+<a href="/"><img src="/assets/images/logo-white.svg" alt="Logo white" />
+<span>
+A Bitnami project
+</span>
+</a></div>
+</div>
+<div class='col-8'>
+<nav class='text-r'>
+<a href="/" class="margin-h-normal">Home</a>
+<a href="/docs" class="margin-h-normal">Documentation</a>
+<a href="https://github.com/kubeless/kubeless-ui" class="margin-h-normal">Kubeless UI</a>
+<a href="https://serverless.com/framework/docs/providers/kubeless/guide/intro/" class="margin-h-normal">Serverless Plugin</a>
+<a href="https://github.com/kubeless" class="margin-l-normal">GitHub</a>
+</nav>
+</div>
+</div>
+</header>
+
+</div>
+</div>
+<main class='container margin-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-3'>
+<h4 class='margin-t-bigger'>
+<img src="/assets/images/logo-dark.svg" alt="Kubeless logo" class="float-l avatar avatar-medium" />
+<div class='padding-v-small'>
+Documentation
+</div>
+</h4>
+<ul class='remove-style padding-small'>
+<li>
+<b>Usage</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/quick-start">Quick Start
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/runtimes">Runtimes
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/http-triggers">Exposing Functions
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/monitoring">Monitoring
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/autoscaling">Autoscaling
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/building-functions">Build Function Images
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/use-existing-kafka">Use a Custom Apache Kafka
+</a></li>
+<li class='padding-t-big'>
+<b>Cloud Providers</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/kubeless-on-azure-container-services">Azure Container Services
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/GKE-deployment">Google Kubernetes Engine
+</a></li>
+<li class='padding-t-big'>
+<b>Development</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/architecture">Architecture
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/dev-guide">Development Guide
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/implementing-new-runtime">Implementing a New Runtime
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/debugging">Debugging
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/function-controller-configuration">Kubeless Controller Configuration
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/release-flow">Release Flow
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/troubleshooting">Troubleshooting
+</a></li>
+</ul>
+
+</div>
+<div class='col-9'>
+<h1>Controller configurations for Functions</h1>
+
+<h3>Using ConfigMap</h3>
+
+<p>Configurations for functions can be done in <code>ConfigMap</code>: <code>kubeless-config</code> which is a part of <code>Kubeless</code> deployment manifests.</p>
+
+<p>Deployments for function can be configured in <code>data</code> inside the <code>ConfigMap</code>, using key <code>deployment</code>, which takes a string in the form of <code>yaml/json</code> and is driven by the structure of <a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.9/#deployment-v1beta2-apps">v1beta2.Deployment</a>:</p>
+
+<p>E.g. In the below configuration, new <strong>annotations</strong> are added globally to all function deployments and podTemplates and <strong>replicas</strong> for each function pod will be <code>2</code>.</p>
+
+<pre><code class="yaml">apiVersion: v1
+data:
+  deployment: |-
+    {
+      &quot;metadata&quot;: {
+          &quot;annotations&quot;:{
+            &quot;annotation-to-deployment&quot;: &quot;value&quot;
+          }
+      },
+      &quot;spec&quot;: {
+        &quot;replicas&quot;: 2,
+        &quot;template&quot;: {
+          &quot;annotations&quot;: {
+            &quot;annotations-to-pod&quot;: &quot;value&quot;
+          }
+        }
+      }
+    }
+  ingress-enabled: &quot;false&quot;
+  service-type: ClusterIP
+kind: ConfigMap
+metadata:
+  name: kubeless-config
+  namespace: kubeless
+</code></pre>
+
+<p>It is <strong>recommended</strong> to have controlled custom configurations on the following <strong>items</strong> (<em>but is not limited to just these</em>):</p>
+
+<blockquote>
+<p>Warning: You should know what you are doing.</p>
+</blockquote>
+
+<ul>
+<li>v1beta2.Deployment.ObjectMeta.Annotations</li>
+<li>v1beta2.Deployment.Spec.replicas</li>
+<li>v1beta2.Deployment.Spec.Strategy</li>
+<li>v1beta2.Deployment.Spec.Template.ObjectMeta.Annotations</li>
+<li>v1beta2.Deployment.Spec.Template.Spec.NodeSelector</li>
+<li>v1beta2.Deployment.Spec.Template.Spec.NodeName</li>
+</ul>
+
+<p>Having said all that, if one wants to override configurations from the <code>ConfigMap</code> then in <code>Function</code> manifest one needs to provide the details as follows:</p>
+
+<pre><code class="yaml">apiVersion: kubeless.io/v1beta1
+kind: Function
+metadata:
+  name: testfunc
+spec:
+  deployment:  ### Definition as per v1beta2.Deployment
+    metadata:
+      annotations:
+        &quot;annotation-to-deploy&quot;: &quot;final-value-in-deployment&quot;
+    spec:
+      replicas: 2  ### Final deployment gets Replicas as 2
+      template:
+        metadata:
+          annotations:
+            &quot;annotation-to-pod&quot;: &quot;value&quot;
+  deps: &quot;&quot;
+  function: |
+    module.exports = {
+      foo: function (req, res) {
+            res.end(&#39;hello world updated!!!&#39;)
+      }
+    }
+  function-content-type: text
+  handler: hello.foo
+  runtime: nodejs8
+  service:
+    ports:
+    - name: http-function-port
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    type: ClusterIP
+</code></pre>
+
+<h3>Install kubeless in different namespace</h3>
+
+<p>If you have installed kubeless into some other namespace (which is not called <code>kubeless</code>) or changed the name of the config file from kubeless-config to something else, then you have to export the kubeless namespace and the name of kubeless config as environment variables before using kubless cli. This can be done as follows:</p>
+
+<pre><code class="bash">$ export KUBELESS_NAMESPACE=&lt;name of namespace&gt;
+$ export KUBELESS_CONFIG=&lt;name of config file&gt;
+</code></pre>
+
+<p>or the following information can be added to <code>functions.kubeless.io</code> <code>CustomResourceDefinition</code> as <code>annotations</code>. E.g. below <code>CustomResourceDefinition</code> will signify <code>kubeless-controller</code> is installed in namespace <code>kubless-new-namespace</code> and config name is <code>kubeless-config-new-name</code></p>
+
+<pre><code class="yaml">apiVersion: apiextensions.k8s.io/v1beta1
+description: Kubernetes Native Serverless Framework
+kind: CustomResourceDefinition
+metadata:
+  name: functions.kubeless.io
+  annotations:
+    kubeless.io/namespace: kubless-new-namespace
+    kubeless.io/config: kubeless-config-new-name
+spec:
+  group: kubeless.io
+  names:
+    kind: Function
+    plural: functions
+    singular: function
+  scope: Namespaced
+  version: v1beta1
+</code></pre>
+
+<p>The priority of deciding the <code>namespace</code> and <code>config name</code> (highest to lowest) is:</p>
+
+<ul>
+<li>Environment variables</li>
+<li>Annotations in <code>functions.kubeless.io</code> CRD</li>
+<li>default: <code>namespace</code> is <code>kubeless</code> and <code>ConfigMap</code> is <code>kubeless-config</code><br></li>
+</ul>
+
+</div>
+</div>
+</main>
+<div class='margin-t-giant'>
+<div class='Footer'>
+<div class='container padding-h-big padding-v-bigger'>
+<div class='Footer__Border padding-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-6'>
+<h4 class='inverse margin-reset'>
+<img src="/assets/images/logo-white.svg" alt="Kubeless logo" class="Footer__Logo" />
+</h4>
+<p class='type-color-iron type-small margin-reset'>
+© Kubeless 2018 | All Rights Reserved.
+</p>
+</div>
+<div class='col-6 text-r'>
+<a href="https://github.com/kubeless" class="margin-l-small"><img src="/assets/images/social/github.svg" alt="See the Github Profile of the Kubeless project" />
+</a></div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</body>
+</html>
+<script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js'></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>

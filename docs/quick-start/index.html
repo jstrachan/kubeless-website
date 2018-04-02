@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<!-- Head information -->
+<head>
+<meta charset='utf-8'>
+<meta content='width=device-width' initial-scale='1' name='viewport'>
+<!-- Always force latest IE rendering engine or request Chrome Frame -->
+<!-- %meta{content: 'IE=edge,chrome=1', http-equiv: 'X-UA-Compatible'} -->
+<link href='/assets/images/favicon/favicon-196x196.png' rel='icon' sizes='196x196' type='image/png'>
+<link href='/assets/images/favicon/favicon-32x32.png' rel='icon' sizes='32x32' type='image/png'>
+<link href='/assets/images/favicon/favicon-16x16.png' rel='icon' sizes='16x16' type='image/png'>
+<link href='/assets/images/favicon/favicon-128.png' rel='icon' sizes='128x128' type='image/png'>
+<link href='/assets/images/favicon/favicon.ico' rel='icon'>
+<!-- Use title if it's in the page YAML frontmatter -->
+<title>
+Kubeless
+</title>
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css' media='screen' rel='stylesheet'>
+<!-- Bitnami Design System -->
+<link href='https://fonts.googleapis.com/css?family=Fira+Sans:300,400,700|Hind:300,400' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.components.min.css' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.min.css' media='screen' rel='stylesheet'>
+<!-- Include the javascripts and the styles of the page -->
+<link href="/assets/stylesheets/main.css" rel="stylesheet" />
+<script src="/assets/javascripts/main.js"></script>
+</head>
+
+<!-- Main content -->
+<body>
+<div class='gradient-135-accent elevation-1'>
+<div class='container'>
+<header class='Header padding-v-big'>
+<div class='row collapse-b-tablet align-center'>
+<div class='col-4'>
+<div class='Header__Logo'>
+<a href="/"><img src="/assets/images/logo-white.svg" alt="Logo white" />
+<span>
+A Bitnami project
+</span>
+</a></div>
+</div>
+<div class='col-8'>
+<nav class='text-r'>
+<a href="/" class="margin-h-normal">Home</a>
+<a href="/docs" class="margin-h-normal">Documentation</a>
+<a href="https://github.com/kubeless/kubeless-ui" class="margin-h-normal">Kubeless UI</a>
+<a href="https://serverless.com/framework/docs/providers/kubeless/guide/intro/" class="margin-h-normal">Serverless Plugin</a>
+<a href="https://github.com/kubeless" class="margin-l-normal">GitHub</a>
+</nav>
+</div>
+</div>
+</header>
+
+</div>
+</div>
+<main class='container margin-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-3'>
+<h4 class='margin-t-bigger'>
+<img src="/assets/images/logo-dark.svg" alt="Kubeless logo" class="float-l avatar avatar-medium" />
+<div class='padding-v-small'>
+Documentation
+</div>
+</h4>
+<ul class='remove-style padding-small'>
+<li>
+<b>Usage</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/quick-start">Quick Start
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/runtimes">Runtimes
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/http-triggers">Exposing Functions
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/monitoring">Monitoring
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/autoscaling">Autoscaling
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/building-functions">Build Function Images
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/use-existing-kafka">Use a Custom Apache Kafka
+</a></li>
+<li class='padding-t-big'>
+<b>Cloud Providers</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/kubeless-on-azure-container-services">Azure Container Services
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/GKE-deployment">Google Kubernetes Engine
+</a></li>
+<li class='padding-t-big'>
+<b>Development</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/architecture">Architecture
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/dev-guide">Development Guide
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/implementing-new-runtime">Implementing a New Runtime
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/debugging">Debugging
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/function-controller-configuration">Kubeless Controller Configuration
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/release-flow">Release Flow
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/troubleshooting">Troubleshooting
+</a></li>
+</ul>
+
+</div>
+<div class='col-9'>
+<h1>Installation</h1>
+
+<p>Installation is made of three steps:</p>
+
+<ul>
+<li>Download the <code>kubeless</code> CLI from the <a href="https://github.com/kubeless/kubeless/releases">release page</a>. (OSX users can also use <a href="https://brew.sh/">brew</a>: <code>brew install kubeless</code>).</li>
+<li>Create a <code>kubeless</code> namespace (used by default)</li>
+<li>Then use one of the YAML manifests found in the release page to deploy kubeless. It will create a <em>functions</em> Custom Resource Definition and launch a controller.</li>
+</ul>
+
+<p>There are several kubeless manifests being shipped for multiple k8s environments (non-rbac, rbac and openshift), pick the one that corresponds to your environment:</p>
+
+<ul>
+<li><code>kubeless-$RELEASE.yaml</code> is used for non-RBAC Kubernetes cluster.</li>
+<li><code>kubeless-rbac-$RELEASE.yaml</code> is used for RBAC-enabled Kubernetes cluster.</li>
+<li><code>kubeless-openshift-$RELEASE.yaml</code> is used to deploy Kubeless to OpenShift (1.5+).</li>
+</ul>
+
+<p>For example, this below is a show case of deploying kubeless to a non-RBAC Kubernetes cluster.</p>
+
+<pre><code class="console">$ export RELEASE=v0.5.0
+$ kubectl create ns kubeless
+$ kubectl create -f https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless-$RELEASE.yaml
+
+$ kubectl get pods -n kubeless
+NAME                                           READY     STATUS    RESTARTS   AGE
+kubeless-controller-manager-567dcb6c48-ssx8x   1/1       Running   0          1h
+
+$ kubectl get deployment -n kubeless
+NAME                          DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+kubeless-controller-manager   1         1         1            1           1h
+
+$ kubectl get customresourcedefinition
+NAME                          AGE
+cronjobtriggers.kubeless.io   1h
+functions.kubeless.io         1h
+httptriggers.kubeless.io      1h
+
+$ kubectl get functions
+NAME         AGE
+get-python   1d
+</code></pre>
+
+<h3>Details on <a href="./function-controller-configuration.md">installing kubeless in a different namespace</a> can be found here.</h3>
+
+<p>You are now ready to create functions.</p>
+
+<h1>Usage</h1>
+
+<p>You can use the CLI to create a function. Functions have three possible types:</p>
+
+<ul>
+<li>http triggered (function will expose an HTTP endpoint)</li>
+<li>pubsub triggered (function will consume event on a specific topic; a running kafka cluster on your k8s is required)</li>
+<li>schedule triggered (function will be called on a cron schedule)</li>
+</ul>
+
+<h2>HTTP function</h2>
+
+<p>Here is a toy:</p>
+
+<pre><code class="python">def foobar(event, context):
+  print event
+  return event[&#39;data&#39;]
+</code></pre>
+
+<p>Functions in Kubeless have the same format regardless of the language of the function or the event source. In general, every function:</p>
+
+<ul>
+<li>Receives an object <code>event</code> as their first parameter. This parameter includes all the information regarding the event source. In particular, the key &#39;data&#39; should contain the body of the function request.</li>
+<li>Receives a second object <code>context</code> with general information about the function.</li>
+<li>Returns a string/object that will be used as response for the caller.</li>
+</ul>
+
+<p>You can find more details about the function interface <a href="./runtimes#runtimes-interface">here</a></p>
+
+<p>You create it with:</p>
+
+<pre><code class="console">$ kubeless function deploy get-python --runtime python2.7 \
+                                --from-file test.py \
+                                --handler test.foobar
+INFO[0000] Deploying function...
+INFO[0000] Function get-python submitted for deployment
+INFO[0000] Check the deployment status executing &#39;kubeless function ls get-python&#39;
+</code></pre>
+
+<p>Let&#39;s dissect the command:</p>
+
+<ul>
+<li><code>get-python</code>: This is the name of the function we want to deploy.</li>
+<li><code>--runtime python2.7</code>: This is the runtime we want to use to run our function. Available runtimes are shown in the help information.</li>
+<li><code>--from-file test.py</code>: This is the file containing the function code. It is supported to specify a zip file as far as it doesn&#39;t exceed the maximum size for an etcd entry (1 MB).</li>
+<li><code>--handler test.foobar</code>: This specifies the file and the exposed function that will be used when receiving requests. In this example we are using the function <code>foobar</code> from the file <code>test.py</code>.</li>
+<li><code>--env</code> to pass env vars to the function like <code>--env foo=bar,bar=foo</code>. See the <a href="https://github.com/kubeless/kubeless/pull/316#issuecomment-332172876">detail</a></li>
+</ul>
+
+<p>Other available options are:</p>
+
+<ul>
+<li><code>--trigger-topic</code> to trigger the function with a certain Kafka topic. See the <a href="#pubsub-function">next example</a>.</li>
+<li><code>--timeout</code> to specify the timeout (in seconds) for the function to complete its execution (default &quot;180&quot;)</li>
+<li><code>--schedule</code> to trigger the function following a certain schedule using Cron notation. F.e. <code>--schedule &quot;*/10 * * * *&quot;</code> would trigger the function every 10 minutes.</li>
+<li><code>--secrets</code>: This sets a list of Secrets to be mounted as Volumes to the functions pod. They will be available in the path <code>/&lt;secret_name&gt;</code>.</li>
+</ul>
+
+<p>You can find the rest of options available when deploying a function executing <code>kubeless function deploy --help</code></p>
+
+<p>You will see the function custom resource created:</p>
+
+<pre><code class="console">$ kubectl get functions
+NAME         AGE
+get-python   1h
+
+$ kubeless function ls
+NAME            NAMESPACE   HANDLER       RUNTIME   TYPE    TOPIC       DEPENDENCIES    STATUS
+get-python      default     helloget.foo  python2.7 HTTP                                1/1 READY
+</code></pre>
+
+<p>You can then call the function with:</p>
+
+<pre><code class="console">$ kubeless function call get-python --data &#39;{&quot;echo&quot;: &quot;echo echo&quot;}&#39;
+{&quot;echo&quot;: &quot;echo echo&quot;}
+</code></pre>
+
+<p>Or you can curl directly with <code>kubectl proxy</code>
+using an <a href="https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#manually-constructing-apiserver-proxy-urls">apiserver proxy
+URL</a>.
+For example:</p>
+
+<pre><code class="console">$ kubectl proxy -p 8080 &amp;
+
+$ curl -L --data &#39;{&quot;Another&quot;: &quot;Echo&quot;}&#39; \
+  --header &quot;Content-Type:application/json&quot; \
+  localhost:8080/api/v1/proxy/namespaces/default/services/get-python:http-function-port/
+{&quot;Another&quot;: &quot;Echo&quot;}
+</code></pre>
+
+<p>Kubeless also supports <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">ingress</a> which means you can provide your custom URL to the function. Please refer to <a href="./routing">this doc</a> for more details.</p>
+
+<h2>PubSub function</h2>
+
+<p>We provide several <a href="https://hub.docker.com/r/kubeless/">PubSub runtimes</a>, which has suffix <code>event-consumer</code>, which help you to quickly deploy your function with PubSub mechanism. The PubSub function will expect to consume input messages from a predefined Kafka topic which means Kafka is required. In Kubeless <a href="https://github.com/kubeless/kubeless/releases">release page</a>, you can find the manifest to quickly deploy a collection of Kafka and Zookeeper statefulsets. If you have a Kafka cluster already running in the same Kubernetes environment, you can also deploy PubSub function with it. Check out <a href="./use-existing-kafka.md">this tutorial</a> for more details how to do that.</p>
+
+<p>If you want to deploy the manifest we provide to deploy Kafka and Zookeper execute the following command:</p>
+
+<pre><code class="console">$ kubectl create -f https://github.com/kubeless/kubeless/releases/download/$RELEASE/kafka-zookeeper-$RELEASE.yaml
+</code></pre>
+
+<blockquote>
+<p>NOTE: Kafka statefulset uses a PVC (persistent volume claim). Depending on the configuration of your cluster you may need to provision a PV (Persistent Volume) that matches the PVC or configure dynamic storage provisioning. Otherwise Kafka pod will fail to get scheduled. Also note that Kafka is only required for PubSub functions, you can still use http triggered functions. Please refer to <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">PV</a> documentation on how to provision storage for PVC.</p>
+</blockquote>
+
+<p>Once deployed, you can verify two statefulsets up and running:</p>
+
+<pre><code>$ kubectl -n kubeless get statefulset
+NAME      DESIRED   CURRENT   AGE
+kafka     1         1         40s
+zoo       1         1         42s
+
+$ kubectl -n kubeless get svc
+NAME        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)             AGE
+broker      ClusterIP   None            &lt;none&gt;        9092/TCP            1m
+kafka       ClusterIP   10.55.250.89    &lt;none&gt;        9092/TCP            1m
+zoo         ClusterIP   None            &lt;none&gt;        9092/TCP,3888/TCP   1m
+zookeeper   ClusterIP   10.55.249.102   &lt;none&gt;        2181/TCP            1m
+</code></pre>
+
+<p>Now you can deploy a pubsub function. A function can be as simple as:</p>
+
+<pre><code class="python">def foobar(event, context):
+  print event[&#39;data&#39;]
+  return event[&#39;data&#39;]
+</code></pre>
+
+<p>You create it the same way than an <em>HTTP</em> function except that you specify a <code>--trigger-topic</code>.</p>
+
+<pre><code class="console">$ kubeless function deploy test --runtime python2.7 \
+                                --handler test.foobar \
+                                --from-file test.py \
+                                --trigger-topic test-topic
+</code></pre>
+
+<p>After that you can invoke them publishing messages in that topic. To allow you to easily manage topics <code>kubeless</code> provides a convenience function <code>kubeless topic</code>. You can create/delete and publish to a topic easily.</p>
+
+<pre><code class="console">$ kubeless topic create test-topic
+$ kubeless topic publish --topic test-topic --data &quot;Hello World!&quot;
+</code></pre>
+
+<p>You can check the result in the pod logs:</p>
+
+<pre><code class="console">$ kubectl logs test-695251588-cxwmc
+...
+Hello World!
+</code></pre>
+
+<h2>Other commands</h2>
+
+<p>You can delete and list functions:</p>
+
+<pre><code class="console">$ kubeless function ls
+NAME        NAMESPACE   HANDLER     RUNTIME     DEPENDENCIES    STATUS
+test        default     test.foobar python2.7                   1/1 READY
+
+$ kubeless function delete test
+
+$ kubeless function ls
+NAME        NAMESPACE   HANDLER     RUNTIME     DEPENDENCIES    STATUS
+</code></pre>
+
+<p>You can create, list and delete PubSub topics:</p>
+
+<pre><code class="console">$ kubeless topic create another-topic
+Created topic &quot;another-topic&quot;.
+
+$ kubeless topic delete another-topic
+
+$ kubeless topic ls
+</code></pre>
+
+<p>You can also see the list of supported runtimes:</p>
+
+<pre><code class="console">$ kubeless get-server-config
+INFO[0000] Current Server Config:
+INFO[0000] Supported Runtimes are: python2.7, python3.4, python3.6, nodejs6, nodejs8, ruby2.4, php7.2
+</code></pre>
+
+<h2>Examples</h2>
+
+<p>See the <a href="https://github.com/kubeless/kubeless/tree/master/examples">examples</a> directory for a list of various examples. Minio, SLACK, Twitter etc ...</p>
+
+<p>Also checkout the <a href="https://github.com/kubeless/functions">functions repository</a>,
+where we&#39;re building a library of ready to use kubeless examples, including an
+<a href="https://github.com/kubeless/functions/tree/master/incubator">incubator</a>
+to encourage contributions from the community - <strong>your PR is welcome</strong> ! :)</p>
+
+</div>
+</div>
+</main>
+<div class='margin-t-giant'>
+<div class='Footer'>
+<div class='container padding-h-big padding-v-bigger'>
+<div class='Footer__Border padding-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-6'>
+<h4 class='inverse margin-reset'>
+<img src="/assets/images/logo-white.svg" alt="Kubeless logo" class="Footer__Logo" />
+</h4>
+<p class='type-color-iron type-small margin-reset'>
+© Kubeless 2018 | All Rights Reserved.
+</p>
+</div>
+<div class='col-6 text-r'>
+<a href="https://github.com/kubeless" class="margin-l-small"><img src="/assets/images/social/github.svg" alt="See the Github Profile of the Kubeless project" />
+</a></div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</body>
+</html>
+<script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js'></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>

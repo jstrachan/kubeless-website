@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<!-- Head information -->
+<head>
+<meta charset='utf-8'>
+<meta content='width=device-width' initial-scale='1' name='viewport'>
+<!-- Always force latest IE rendering engine or request Chrome Frame -->
+<!-- %meta{content: 'IE=edge,chrome=1', http-equiv: 'X-UA-Compatible'} -->
+<link href='/assets/images/favicon/favicon-196x196.png' rel='icon' sizes='196x196' type='image/png'>
+<link href='/assets/images/favicon/favicon-32x32.png' rel='icon' sizes='32x32' type='image/png'>
+<link href='/assets/images/favicon/favicon-16x16.png' rel='icon' sizes='16x16' type='image/png'>
+<link href='/assets/images/favicon/favicon-128.png' rel='icon' sizes='128x128' type='image/png'>
+<link href='/assets/images/favicon/favicon.ico' rel='icon'>
+<!-- Use title if it's in the page YAML frontmatter -->
+<title>
+Kubeless
+</title>
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css' media='screen' rel='stylesheet'>
+<!-- Bitnami Design System -->
+<link href='https://fonts.googleapis.com/css?family=Fira+Sans:300,400,700|Hind:300,400' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.components.min.css' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.min.css' media='screen' rel='stylesheet'>
+<!-- Include the javascripts and the styles of the page -->
+<link href="/assets/stylesheets/main.css" rel="stylesheet" />
+<script src="/assets/javascripts/main.js"></script>
+</head>
+
+<!-- Main content -->
+<body>
+<div class='gradient-135-accent elevation-1'>
+<div class='container'>
+<header class='Header padding-v-big'>
+<div class='row collapse-b-tablet align-center'>
+<div class='col-4'>
+<div class='Header__Logo'>
+<a href="/"><img src="/assets/images/logo-white.svg" alt="Logo white" />
+<span>
+A Bitnami project
+</span>
+</a></div>
+</div>
+<div class='col-8'>
+<nav class='text-r'>
+<a href="/" class="margin-h-normal">Home</a>
+<a href="/docs" class="margin-h-normal">Documentation</a>
+<a href="https://github.com/kubeless/kubeless-ui" class="margin-h-normal">Kubeless UI</a>
+<a href="https://serverless.com/framework/docs/providers/kubeless/guide/intro/" class="margin-h-normal">Serverless Plugin</a>
+<a href="https://github.com/kubeless" class="margin-l-normal">GitHub</a>
+</nav>
+</div>
+</div>
+</header>
+
+</div>
+</div>
+<main class='container margin-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-3'>
+<h4 class='margin-t-bigger'>
+<img src="/assets/images/logo-dark.svg" alt="Kubeless logo" class="float-l avatar avatar-medium" />
+<div class='padding-v-small'>
+Documentation
+</div>
+</h4>
+<ul class='remove-style padding-small'>
+<li>
+<b>Usage</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/quick-start">Quick Start
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/runtimes">Runtimes
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/http-triggers">Exposing Functions
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/monitoring">Monitoring
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/autoscaling">Autoscaling
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/building-functions">Build Function Images
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/use-existing-kafka">Use a Custom Apache Kafka
+</a></li>
+<li class='padding-t-big'>
+<b>Cloud Providers</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/kubeless-on-azure-container-services">Azure Container Services
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/GKE-deployment">Google Kubernetes Engine
+</a></li>
+<li class='padding-t-big'>
+<b>Development</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/architecture">Architecture
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/dev-guide">Development Guide
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/implementing-new-runtime">Implementing a New Runtime
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/debugging">Debugging
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/function-controller-configuration">Kubeless Controller Configuration
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/release-flow">Release Flow
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/troubleshooting">Troubleshooting
+</a></li>
+</ul>
+
+</div>
+<div class='col-9'>
+<h1>How to implement a new Kubeless run time</h1>
+
+<p>As of today, Kubeless supports the following languages:</p>
+
+<ul>
+<li>Ruby</li>
+<li>Node.js</li>
+<li>Python</li>
+<li>.NET</li>
+</ul>
+
+<p>Each language interpreter is implemented as an image of a Docker container, dispatched by the Kubeless controller.</p>
+
+<p>All the structures that implement  language support are coded in the file <code>langruntime.go</code>, located under the <code>&lt;..&gt;kuberless/pkg/langruntime</code> directory of the project tree repository.</p>
+
+<p>If you want to extend it and make another language available it is necessary to change the following components:</p>
+
+<h2>1. Update the kubeless-config configmap</h2>
+
+<p>In this configmap there is a set of runtime images. You need to update this set with an entry pointing to the repository of the Docker container image for the runtime of the new language.</p>
+
+<p>Usually there are three entries - one for HTTP triggers, another for event based functions and another one for the Init container that will be used to install dependencies in the build process. If your new runtime implementation will support only HTTP triggers, then create only two entries as follows:</p>
+
+<p>In the example below, a custom image for <code>dotnetcore</code> has been added. You can optionally add <code>imagePullSecrets</code> if they are necessary to pull the image from a private Docker registry.</p>
+
+<pre><code class="patch">runtime-images
+...
++        - ID: &quot;dotnetcore&quot;
++         versions:
++         - name: &quot;dotnetcore2&quot;
++           version: &quot;2.0&quot;
++           httpImage: &quot;mydocker/kubeless-netcore:latest&quot;
++           initImage: &quot;mydocker/kubeless-netcore-build:latest&quot;
++           imagePullSecrets:
++           - imageSecret: &quot;Secret&quot;
++         depName: &quot;requirements.xml&quot;
++         fileNameSuffix: &quot;.cs&quot;
+</code></pre>
+
+<p>Restart the controller after updating the configmap.</p>
+
+<h2>2. Add the build instructions to include dependencies in the runtime</h2>
+
+<p>Each runtime has specific instructions to install its dependencies. These instructions are specified in the method <code>GetBuildContainer()</code>. About this method you should know:
+ - The folder with the function and the dependency files is mounted at <code>depsVolume.MountPath</code>
+ - Dependencies should be installed in the folder <code>runtimeVolume.MountPath</code></p>
+
+<h2>3. Update the deployment to load requirements for the runtime image</h2>
+
+<p>Some languages require to specify an environment variable in order to load dependencies from a certain path. If that is the case, update the function <code>updateDeployment()</code> to include the required environment variable:</p>
+
+<pre><code class="patch">func UpdateDeployment(dpm *v1beta1.Deployment, depsPath, runtime string) {
+    switch {
+...
++   case strings.Contains(runtime, &quot;ruby&quot;):
++       dpm.Spec.Template.Spec.Containers[0].Env = append(
++           dpm.Spec.Template.Spec.Containers[0].Env,
++           v1.EnvVar{
++               Name:  &quot;GEM_HOME&quot;,
++               Value: path.Join(depsPath, &quot;ruby/2.4.0&quot;),
++           })
+</code></pre>
+
+<p>This function is called if there are requirements to be injected in your runtime or if it is a custom runtime.</p>
+
+<h2>4. Add examples</h2>
+
+<p>In order to demonstrate the usage of the new runtime it will be necessary to add at least three different examples:</p>
+
+<ul>
+<li>GET Example: A simple example in which the function returns a &quot;hello world&quot; string or similar.</li>
+<li>POST Example: Another example in which the function reads the received input and returns a response.</li>
+<li>Deps Example: In this example the runtime should load an external library (installed via the build process) and produce a response.</li>
+</ul>
+
+<p>The examples should be added to the folder <code>examples/&lt;language_id&gt;/</code> and should be added as well to the Makefile present in <code>examples/Makefile</code>. Note that the target should be <code>get-&lt;language_id&gt;</code>, <code>post-&lt;language_id&gt;</code> and <code>get-&lt;language_id&gt;-deps</code> for three examples above.</p>
+
+<h2>5. Add tests</h2>
+
+<p>For each new runtime, there should be integration tests that deploys the three examples above and check that the function is successfully deployed and that the output of the function is the expected one. For doing so add the counterpart <code>get-&lt;language_id&gt;-verify</code>, <code>post-&lt;language_id&gt;-verify</code> and <code>get-&lt;language_id&gt;-deps-verify</code> in the <code>examples/Makefile</code> and enable the execution of these tests in the script <code>test/integration-tests.bats</code>:</p>
+
+<pre><code class="patch">...
++@test &quot;Test function: get-dotnetcore&quot; {
++  test_kubeless_function get-dotnetcore
++}
+...
++@test &quot;Test function: post-dotnetcore&quot; {
++  test_kubeless_function post-dotnetcore
++}
+...
++@test &quot;Test function: get-dotnetcore-deps&quot; {
++  test_kubeless_function get-dotnetcore-deps
++}
+</code></pre>
+
+<p>Unit test are encouraged but not required. If there is a specific behaviour that needs testing (and it is not covered by the integration tests) you can add tests at <code>pkg/langruntime/langruntime_test.go</code>.</p>
+
+<h2>Conclusion</h2>
+
+<p>Once you have followed the above steps send PR to the kubeless project, the CI system will pick your changes and test them. Once the PR is accepted by one of the maintainers the changes will be merged and included in the next release of Kubeless. </p>
+
+<p>Stay tuned for future documentations on these additional steps! :-)</p>
+
+</div>
+</div>
+</main>
+<div class='margin-t-giant'>
+<div class='Footer'>
+<div class='container padding-h-big padding-v-bigger'>
+<div class='Footer__Border padding-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-6'>
+<h4 class='inverse margin-reset'>
+<img src="/assets/images/logo-white.svg" alt="Kubeless logo" class="Footer__Logo" />
+</h4>
+<p class='type-color-iron type-small margin-reset'>
+© Kubeless 2018 | All Rights Reserved.
+</p>
+</div>
+<div class='col-6 text-r'>
+<a href="https://github.com/kubeless" class="margin-l-small"><img src="/assets/images/social/github.svg" alt="See the Github Profile of the Kubeless project" />
+</a></div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</body>
+</html>
+<script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js'></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>

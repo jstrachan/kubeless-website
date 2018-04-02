@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<!-- Head information -->
+<head>
+<meta charset='utf-8'>
+<meta content='width=device-width' initial-scale='1' name='viewport'>
+<!-- Always force latest IE rendering engine or request Chrome Frame -->
+<!-- %meta{content: 'IE=edge,chrome=1', http-equiv: 'X-UA-Compatible'} -->
+<link href='/assets/images/favicon/favicon-196x196.png' rel='icon' sizes='196x196' type='image/png'>
+<link href='/assets/images/favicon/favicon-32x32.png' rel='icon' sizes='32x32' type='image/png'>
+<link href='/assets/images/favicon/favicon-16x16.png' rel='icon' sizes='16x16' type='image/png'>
+<link href='/assets/images/favicon/favicon-128.png' rel='icon' sizes='128x128' type='image/png'>
+<link href='/assets/images/favicon/favicon.ico' rel='icon'>
+<!-- Use title if it's in the page YAML frontmatter -->
+<title>
+Kubeless
+</title>
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css' media='screen' rel='stylesheet'>
+<!-- Bitnami Design System -->
+<link href='https://fonts.googleapis.com/css?family=Fira+Sans:300,400,700|Hind:300,400' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.components.min.css' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.min.css' media='screen' rel='stylesheet'>
+<!-- Include the javascripts and the styles of the page -->
+<link href="/assets/stylesheets/main.css" rel="stylesheet" />
+<script src="/assets/javascripts/main.js"></script>
+</head>
+
+<!-- Main content -->
+<body>
+<div class='gradient-135-accent elevation-1'>
+<div class='container'>
+<header class='Header padding-v-big'>
+<div class='row collapse-b-tablet align-center'>
+<div class='col-4'>
+<div class='Header__Logo'>
+<a href="/"><img src="/assets/images/logo-white.svg" alt="Logo white" />
+<span>
+A Bitnami project
+</span>
+</a></div>
+</div>
+<div class='col-8'>
+<nav class='text-r'>
+<a href="/" class="margin-h-normal">Home</a>
+<a href="/docs" class="margin-h-normal">Documentation</a>
+<a href="https://github.com/kubeless/kubeless-ui" class="margin-h-normal">Kubeless UI</a>
+<a href="https://serverless.com/framework/docs/providers/kubeless/guide/intro/" class="margin-h-normal">Serverless Plugin</a>
+<a href="https://github.com/kubeless" class="margin-l-normal">GitHub</a>
+</nav>
+</div>
+</div>
+</header>
+
+</div>
+</div>
+<main class='container margin-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-3'>
+<h4 class='margin-t-bigger'>
+<img src="/assets/images/logo-dark.svg" alt="Kubeless logo" class="float-l avatar avatar-medium" />
+<div class='padding-v-small'>
+Documentation
+</div>
+</h4>
+<ul class='remove-style padding-small'>
+<li>
+<b>Usage</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/quick-start">Quick Start
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/runtimes">Runtimes
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/http-triggers">Exposing Functions
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/monitoring">Monitoring
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/autoscaling">Autoscaling
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/building-functions">Build Function Images
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/use-existing-kafka">Use a Custom Apache Kafka
+</a></li>
+<li class='padding-t-big'>
+<b>Cloud Providers</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/kubeless-on-azure-container-services">Azure Container Services
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/GKE-deployment">Google Kubernetes Engine
+</a></li>
+<li class='padding-t-big'>
+<b>Development</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/architecture">Architecture
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/dev-guide">Development Guide
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/implementing-new-runtime">Implementing a New Runtime
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/debugging">Debugging
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/function-controller-configuration">Kubeless Controller Configuration
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/release-flow">Release Flow
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/troubleshooting">Troubleshooting
+</a></li>
+</ul>
+
+</div>
+<div class='col-9'>
+<h1>Expose a Kubeless function</h1>
+
+<p>Kubeless leverages <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">Kubernetes ingress</a> to provide routing for functions. By default, a deployed function will be matched to a Kubernetes service using ClusterIP as the service. That means that the function is not exposed publicly. Because of that, we provide the <code>kubeless trigger http</code> command that can make a function publicly available. This guide provides a quick sample on how to do it.</p>
+
+<h2>Ingress controller</h2>
+
+<p>In order to create routes for functions in Kubeless, you must have an Ingress controller running. There are several options to deploy it.</p>
+
+<p>If you are on GKE, you can try <a href="https://github.com/kubernetes/ingress-gce">this</a>. Minikube also provide an addon for ingress, you can enable it executing <code>minikube addons enable ingress</code>. Please note that if you&#39;re intending to use our provided manifest on minikube, please disable the ingress addon.</p>
+
+<h2>Deploy function with Kubeless CLI</h2>
+
+<p>Try our example:</p>
+
+<pre><code class="console">$ cd examples
+$ kubeless function deploy get-python \
+                    --runtime python2.7 \
+                    --handler helloget.foo \
+                    --from-file python/helloget.py
+
+$ kubectl get po
+NAME                          READY     STATUS    RESTARTS   AGE
+get-python-1796153810-krrf3   1/1       Running   0          2s
+
+$ kubectl get svc
+NAME         CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
+get-python   10.0.0.26    &lt;none&gt;        8080/TCP   44s
+</code></pre>
+
+<h2>Create HTTP trigger</h2>
+
+<p>Kubeless support command to create HTTP trigger using which you can control route to function.</p>
+
+<pre><code class="console">$ kubeless trigger http create --help
+Create a http trigger
+
+Usage:
+  kubeless trigger http create &lt;http_trigger_name&gt; FLAG [flags]
+
+Flags:
+      --basic-auth-secret      Specify an existing secret name for basic authentication
+      --enableTLSAcme          If true, routing rule will be configured for use with kube-lego
+      --function-name string   Name of the function to be associated with trigger
+      --gateway                Specify a valid gateway for the Ingress
+  -h, --help                   help for create
+      --hostname string        Specify a valid hostname for the function
+      --namespace string       Specify namespace for the function
+      --path string            Ingress path for the function
+</code></pre>
+
+<p>We will create a http trigger to <code>get-python</code> function:</p>
+
+<pre><code class="console">$ kubeless trigger http create get-python --function-name get-python --path get-python
+</code></pre>
+
+<p>This command will create an ingress object. We can see it with kubectl (this guide is run on minikube):</p>
+
+<pre><code class="console">$ kubectl get ing
+NAME           HOSTS                              ADDRESS          PORTS     AGE
+get-python    get-python.192.168.99.100.nip.io    192.168.99.100   80        59s
+</code></pre>
+
+<p>Kubeless creates a default hostname in form of <function-name>.<master-address>.nip.io. Alternatively, you can provide a real hostname with <code>--hostname</code> flag like this:</p>
+
+<pre><code class="console">$ kubeless trigger http create get-python --function-name get-python --path get-python --hostname example.com
+$ kubectl get ing
+NAME          HOSTS                              ADDRESS          PORTS     AGE
+get-python    example.com                                          80        6s
+</code></pre>
+
+<p>But you have to make sure your hostname is configured properly.</p>
+
+<p>You can test the created HTTP trigger with the following command:</p>
+
+<pre><code class="console">$ curl --data &#39;{&quot;Another&quot;: &quot;Echo&quot;}&#39; \
+  --header &quot;Host: get-python.192.168.99.100.nip.io&quot; \
+  --header &quot;Content-Type:application/json&quot; \
+  192.168.99.100/get-python
+{&quot;Another&quot;: &quot;Echo&quot;}
+</code></pre>
+
+<h2>Enable TLS</h2>
+
+<p>By default, Kubeless doesn&#39;t take care of setting up TLS for its functions. You can do it manually by following the <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#tls">standard procedure</a> of securing ingress. There is also a <a href="https://docs.bitnami.com/kubernetes/how-to/secure-kubernetes-services-with-ingress-tls-letsencrypt/">general guideline</a> to enable TLS for your Kubernetes services using LetsEncrypt and Kube-lego written by Bitnami folks. When you have running Kube-lego, you can deploy function and create route with flag <code>--enableTLSAcme</code> enabled as below:</p>
+
+<pre><code class="console">$ kubeless trigger http create get-python --function-name get-python --path get-python --enableTLSAcme
+</code></pre>
+
+<p>Running the above command, Kubeless will automatically create a ingress object with annotation <code>kubernetes.io/tls-acme: &#39;true&#39;</code> set which will be used by Kube-lego to configure the service certificate.</p>
+
+<h2>Enable Basic Authentication</h2>
+
+<p>By default, Kubeless doesn&#39;t take care about securing its exposed functions.
+You can do it manually depending on your Ingress controller, some examples are:
+* <a href="https://github.com/kubernetes/ingress-nginx/blob/master/docs/examples/auth/basic/README.md">Nginx</a>
+* <a href="https://docs.traefik.io/user-guide/kubernetes/#basic-authentication">Traefik</a></p>
+
+<p>When you have a running Nginx or Traefik ingress controller, you can deploy function and create a basic authentication secured route as shown below:
+The Kubernetes secret specified by <code>--basic-auth-secret</code> must exist and located within the same namespace as the http trigger.</p>
+
+<pre><code class="console">$ kubeless trigger http create get-python --function-name get-python --path get-python --basic-auth-secret get-python-secret --gateway nginx
+</code></pre>
+
+<p>Running the above command, Kubeless will automatically create an ingress object with annotations:
+* <code>kubernetes.io/ingress.class: nginx</code>
+* <code>ingress.kubernetes.io/auth-secret: get-python-secret</code>
+* <code>ingress.kubernetes.io/auth-type: basic</code></p>
+
+</div>
+</div>
+</main>
+<div class='margin-t-giant'>
+<div class='Footer'>
+<div class='container padding-h-big padding-v-bigger'>
+<div class='Footer__Border padding-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-6'>
+<h4 class='inverse margin-reset'>
+<img src="/assets/images/logo-white.svg" alt="Kubeless logo" class="Footer__Logo" />
+</h4>
+<p class='type-color-iron type-small margin-reset'>
+© Kubeless 2018 | All Rights Reserved.
+</p>
+</div>
+<div class='col-6 text-r'>
+<a href="https://github.com/kubeless" class="margin-l-small"><img src="/assets/images/social/github.svg" alt="See the Github Profile of the Kubeless project" />
+</a></div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</body>
+</html>
+<script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js'></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>

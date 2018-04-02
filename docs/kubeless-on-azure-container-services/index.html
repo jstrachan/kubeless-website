@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<!-- Head information -->
+<head>
+<meta charset='utf-8'>
+<meta content='width=device-width' initial-scale='1' name='viewport'>
+<!-- Always force latest IE rendering engine or request Chrome Frame -->
+<!-- %meta{content: 'IE=edge,chrome=1', http-equiv: 'X-UA-Compatible'} -->
+<link href='/assets/images/favicon/favicon-196x196.png' rel='icon' sizes='196x196' type='image/png'>
+<link href='/assets/images/favicon/favicon-32x32.png' rel='icon' sizes='32x32' type='image/png'>
+<link href='/assets/images/favicon/favicon-16x16.png' rel='icon' sizes='16x16' type='image/png'>
+<link href='/assets/images/favicon/favicon-128.png' rel='icon' sizes='128x128' type='image/png'>
+<link href='/assets/images/favicon/favicon.ico' rel='icon'>
+<!-- Use title if it's in the page YAML frontmatter -->
+<title>
+Kubeless
+</title>
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css' media='screen' rel='stylesheet'>
+<!-- Bitnami Design System -->
+<link href='https://fonts.googleapis.com/css?family=Fira+Sans:300,400,700|Hind:300,400' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.components.min.css' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.min.css' media='screen' rel='stylesheet'>
+<!-- Include the javascripts and the styles of the page -->
+<link href="/assets/stylesheets/main.css" rel="stylesheet" />
+<script src="/assets/javascripts/main.js"></script>
+</head>
+
+<!-- Main content -->
+<body>
+<div class='gradient-135-accent elevation-1'>
+<div class='container'>
+<header class='Header padding-v-big'>
+<div class='row collapse-b-tablet align-center'>
+<div class='col-4'>
+<div class='Header__Logo'>
+<a href="/"><img src="/assets/images/logo-white.svg" alt="Logo white" />
+<span>
+A Bitnami project
+</span>
+</a></div>
+</div>
+<div class='col-8'>
+<nav class='text-r'>
+<a href="/" class="margin-h-normal">Home</a>
+<a href="/docs" class="margin-h-normal">Documentation</a>
+<a href="https://github.com/kubeless/kubeless-ui" class="margin-h-normal">Kubeless UI</a>
+<a href="https://serverless.com/framework/docs/providers/kubeless/guide/intro/" class="margin-h-normal">Serverless Plugin</a>
+<a href="https://github.com/kubeless" class="margin-l-normal">GitHub</a>
+</nav>
+</div>
+</div>
+</header>
+
+</div>
+</div>
+<main class='container margin-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-3'>
+<h4 class='margin-t-bigger'>
+<img src="/assets/images/logo-dark.svg" alt="Kubeless logo" class="float-l avatar avatar-medium" />
+<div class='padding-v-small'>
+Documentation
+</div>
+</h4>
+<ul class='remove-style padding-small'>
+<li>
+<b>Usage</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/quick-start">Quick Start
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/runtimes">Runtimes
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/http-triggers">Exposing Functions
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/monitoring">Monitoring
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/autoscaling">Autoscaling
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/building-functions">Build Function Images
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/use-existing-kafka">Use a Custom Apache Kafka
+</a></li>
+<li class='padding-t-big'>
+<b>Cloud Providers</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/kubeless-on-azure-container-services">Azure Container Services
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/GKE-deployment">Google Kubernetes Engine
+</a></li>
+<li class='padding-t-big'>
+<b>Development</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/architecture">Architecture
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/dev-guide">Development Guide
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/implementing-new-runtime">Implementing a New Runtime
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/debugging">Debugging
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/function-controller-configuration">Kubeless Controller Configuration
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/release-flow">Release Flow
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/troubleshooting">Troubleshooting
+</a></li>
+</ul>
+
+</div>
+<div class='col-9'>
+<h1>Kubeless on Azure Container Services</h1>
+
+<h2>1. Introduction</h2>
+
+<p>Azure Container Services (ACS) is a built-in service offered by Microsoft Azure platform to natively support complex container-based environments. By design, ACS supports Kubernetes as the main Docker containers orchestrator in its context. To know more about ACS, please, follow <a href="https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-intro-kubernetes">this link</a>.</p>
+
+<p>Kubeless provides a native way to execute serverless functions on top of Kubernetes cluster so, ACS could become an ideal environment to run Kubeless on top of it.</p>
+
+<p>This tutorial describes the entire process to install and execute Kubeless on top of Azure Container Services using Kubernetes.</p>
+
+<h2>2. Creating an ACS Kubernetes cluster</h2>
+
+<p>In order to get Kubeless up and running on top of ACS of course you&#39;ll need an ACS Kubernetes cluster. Fortunately, Microsoft already did a great job documenting the entire process to accomplish that. You can reach out that documentation following <a href="https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-tutorial-kubernetes-deploy-cluster">this link</a>.</p>
+
+<h3>Important notes regarding the cluster creation itself</h3>
+
+<ul>
+<li><p>The Microsoft&#39;s tutorial mentioned before creates a new cluster using Azure CLI 2.0. In order to get the things done in that way, you&#39;ll need to install this CLI. <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest">This link</a> describes the process to do that in your environment.</p></li>
+<li><p>In the same document the property <code>--generate-ssh-keys</code> was used to generate the required SSH keys to the cluster deployment. If you would like to create your own keys, please use <code>--ssh-key-value</code> passing the path to your SSH pub file.</p></li>
+<li><p>ACS deploys at least one virtual machine to act as &quot;master&quot; and at least one virtual machine to act as &quot;agent&quot;. If you&#39;d like to access the master (where kubectl, docker and another stuff resides) for some reason, the usage of your own SSH keys is strongly recommended.</p></li>
+</ul>
+
+<h2>3. Installing &quot;Kubeless-Controller&quot;</h2>
+
+<p>Assuming that the Kubernetes cluster is up and running on top of ACS, its time to install kubeless-controller on master VM. To accomplish, please, follow the steps described on Kubeless documentation, available <a href="./quick-start#installation">here</a>.</p>
+
+<h2>4. Installing &quot;Kubeless Client CLI&quot;</h2>
+
+<p>Kubeless-Controller is the agent in charge to manage the requests from Kubernetes cluster side. The same way, there&#39;s an agent in charge to manage the occurrences from the client side (for instance: register a new function to be executed, call an existing function, etc.). This way, you&#39;ll need to install de Kubeless CLI.</p>
+
+<p>Currently there&#39;s two different ways to accomplish that: manually (generating binaries manually) or in a automatized way (using a pre-compiled package provided by Bitnami). Follow the <a href="./quick-start#installation">installation instructions</a> in order to set it up as well.</p>
+
+<h2>5. Usage and initial tests</h2>
+
+<p>Please follow Kubeless oficial documentation, available <a href="./quick-start#usage">here</a>.</p>
+
+</div>
+</div>
+</main>
+<div class='margin-t-giant'>
+<div class='Footer'>
+<div class='container padding-h-big padding-v-bigger'>
+<div class='Footer__Border padding-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-6'>
+<h4 class='inverse margin-reset'>
+<img src="/assets/images/logo-white.svg" alt="Kubeless logo" class="Footer__Logo" />
+</h4>
+<p class='type-color-iron type-small margin-reset'>
+© Kubeless 2018 | All Rights Reserved.
+</p>
+</div>
+<div class='col-6 text-r'>
+<a href="https://github.com/kubeless" class="margin-l-small"><img src="/assets/images/social/github.svg" alt="See the Github Profile of the Kubeless project" />
+</a></div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</body>
+</html>
+<script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js'></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<!-- Head information -->
+<head>
+<meta charset='utf-8'>
+<meta content='width=device-width' initial-scale='1' name='viewport'>
+<!-- Always force latest IE rendering engine or request Chrome Frame -->
+<!-- %meta{content: 'IE=edge,chrome=1', http-equiv: 'X-UA-Compatible'} -->
+<link href='/assets/images/favicon/favicon-196x196.png' rel='icon' sizes='196x196' type='image/png'>
+<link href='/assets/images/favicon/favicon-32x32.png' rel='icon' sizes='32x32' type='image/png'>
+<link href='/assets/images/favicon/favicon-16x16.png' rel='icon' sizes='16x16' type='image/png'>
+<link href='/assets/images/favicon/favicon-128.png' rel='icon' sizes='128x128' type='image/png'>
+<link href='/assets/images/favicon/favicon.ico' rel='icon'>
+<!-- Use title if it's in the page YAML frontmatter -->
+<title>
+Kubeless
+</title>
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css' media='screen' rel='stylesheet'>
+<!-- Bitnami Design System -->
+<link href='https://fonts.googleapis.com/css?family=Fira+Sans:300,400,700|Hind:300,400' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.components.min.css' media='screen' rel='stylesheet'>
+<link href='//d1d5nb8vlsbujg.cloudfront.net/bitnami-ui/2.0.1/bitnami.ui.min.css' media='screen' rel='stylesheet'>
+<!-- Include the javascripts and the styles of the page -->
+<link href="/assets/stylesheets/main.css" rel="stylesheet" />
+<script src="/assets/javascripts/main.js"></script>
+</head>
+
+<!-- Main content -->
+<body>
+<div class='gradient-135-accent elevation-1'>
+<div class='container'>
+<header class='Header padding-v-big'>
+<div class='row collapse-b-tablet align-center'>
+<div class='col-4'>
+<div class='Header__Logo'>
+<a href="/"><img src="/assets/images/logo-white.svg" alt="Logo white" />
+<span>
+A Bitnami project
+</span>
+</a></div>
+</div>
+<div class='col-8'>
+<nav class='text-r'>
+<a href="/" class="margin-h-normal">Home</a>
+<a href="/docs" class="margin-h-normal">Documentation</a>
+<a href="https://github.com/kubeless/kubeless-ui" class="margin-h-normal">Kubeless UI</a>
+<a href="https://serverless.com/framework/docs/providers/kubeless/guide/intro/" class="margin-h-normal">Serverless Plugin</a>
+<a href="https://github.com/kubeless" class="margin-l-normal">GitHub</a>
+</nav>
+</div>
+</div>
+</header>
+
+</div>
+</div>
+<main class='container margin-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-3'>
+<h4 class='margin-t-bigger'>
+<img src="/assets/images/logo-dark.svg" alt="Kubeless logo" class="float-l avatar avatar-medium" />
+<div class='padding-v-small'>
+Documentation
+</div>
+</h4>
+<ul class='remove-style padding-small'>
+<li>
+<b>Usage</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/quick-start">Quick Start
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/runtimes">Runtimes
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/http-triggers">Exposing Functions
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/monitoring">Monitoring
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/autoscaling">Autoscaling
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/building-functions">Build Function Images
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/use-existing-kafka">Use a Custom Apache Kafka
+</a></li>
+<li class='padding-t-big'>
+<b>Cloud Providers</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/kubeless-on-azure-container-services">Azure Container Services
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/GKE-deployment">Google Kubernetes Engine
+</a></li>
+<li class='padding-t-big'>
+<b>Development</b>
+</li>
+<li class='margin-v-small'>
+<a href="/docs/architecture">Architecture
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/dev-guide">Development Guide
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/implementing-new-runtime">Implementing a New Runtime
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/debugging">Debugging
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/function-controller-configuration">Kubeless Controller Configuration
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/release-flow">Release Flow
+</a></li>
+<li class='margin-v-small'>
+<a href="/docs/troubleshooting">Troubleshooting
+</a></li>
+</ul>
+
+</div>
+<div class='col-9'>
+<h1>Autoscaling function deployment in Kubeless</h1>
+
+<p>This document gives you an overview of how we do autoscaling for functions in Kubeless and also give you a walkthrough how to configure it for custom metric.</p>
+
+<h2>Overview</h2>
+
+<p>Kubernetes introduces <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">HorizontalPodAutoscaler</a> for pod autoscaling. In kubeless, each function is deployed into a separate Kubernetes deployment, so naturally we leverage HPA to automatically scale function based on defined workload metrics.</p>
+
+<p>If you&#39;re on Kubeless CLI, this below command gives you an idea how to setup autoscaling for deployed function:</p>
+
+<pre><code>$ kubeless autoscale --help
+autoscale command allows user to list, create, delete autoscale rule
+for function on Kubeless
+
+Usage:
+  kubeless autoscale SUBCOMMAND [flags]
+  kubeless autoscale [command]
+
+Available Commands:
+  create      automatically scale function based on monitored metrics
+  delete      delete an autoscale from Kubeless
+  list        list all autoscales in Kubeless
+
+Flags:
+  -h, --help   help for autoscale
+
+Use &quot;kubeless autoscale [command] --help&quot; for more information about a command.
+</code></pre>
+
+<p>Once you create an autoscaling rule for a specific function (with <code>kubeless autoscale create</code>), the corresponding HPA object will be added to the system which is going to monitor your function and auto-scale its pods based on the autoscaling rule you define in the command. The default metric is CPU, but you have option to do autoscaling with custom metrics. At this moment, Kubeless supports <code>qps</code> which stands for number of incoming requests to function per second.</p>
+
+<pre><code>$ kubeless autoscale create --help
+automatically scale function based on monitored metrics
+
+Usage:
+  kubeless autoscale create &lt;name&gt; FLAG [flags]
+
+Flags:
+  -h, --help               help for create
+      --max int32          maximum number of replicas (default 1)
+      --metric string      metric to use for calculating the autoscale. Supported
+      metrics: cpu, qps (default &quot;cpu&quot;)
+      --min int32          minimum number of replicas (default 1)
+  -n, --namespace string   Specify namespace for the autoscale
+      --value string       value of the average of the metric across all replicas.
+      If metric is cpu, value is a number represented as percentage. If metric
+      is qps, value must be in format of Quantity
+</code></pre>
+
+<p>The below part will walk you though setup need to be done in order to make function auto-scaled based on <code>qps</code> metric.</p>
+
+<h2>Autoscaling based on CPU usage</h2>
+
+<p>To autoscale based on CPU usage, it is <em>required</em> that your function has been deployed with CPU request limits.</p>
+
+<p>To do this, use the <code>--cpu</code> parameter when deploying your function. Please see the <a href="https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#meaning-of-cpu">Meaning of CPU</a> for the format of the value that should be passed. </p>
+
+<h2>Autoscaling with custom metrics on k8s 1.7</h2>
+
+<p>This walkthrough will go over the step-by-step of setting up the prometheus-based custom API server on your cluster and configuring autoscaler (HPA) to use application metrics sourced from prometheus instance.</p>
+
+<p>This walkthrough is done in <a href="https://github.com/Mirantis/kubeadm-dind-cluster">kubeadm-dind-cluster v1.7</a></p>
+
+<h3>Cluster configuration</h3>
+
+<p>Before getting started, ensure that the main components of your cluster are configured for autoscaling on custom metrics. As of Kubernetes 1.7, this requires enabling the aggregation layer on the API server and configuring the controller manager to use the metrics APIs via their REST clients.</p>
+
+<p>Read more about the aggregation and autoscaling in the Kubernetes documentations:</p>
+
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/api-extension/apiserver-aggregation/">Aggregation layer in v1.7</a></li>
+</ul>
+
+<h4>Start the cluster</h4>
+
+<pre><code class="bash">wget https://cdn.rawgit.com/Mirantis/kubeadm-dind-cluster/master/fixed/dind-cluster-v1.7.sh
+chmod +x dind-cluster-v1.7.sh
+./dind-cluster-v1.7.sh up
+</code></pre>
+
+<p>Checking the state of the cluster:</p>
+
+<pre><code class="bash">docker ps
+kubectl cluster-info
+</code></pre>
+
+<h4>Configuration</h4>
+
+<p>The manifests of kubernetes components in <code>kubeadm-dind-cluster</code> locate at <code>/etc/kubernetes/manifests</code>, you can just jump in the master &quot;container&quot; and edit them directly; and kubeadm manages to recreate the components immediately.</p>
+
+<p>These below configurations must be set:</p>
+
+<ul>
+<li>Enable and configure <a href="https://kubernetes.io/docs/tasks/access-kubernetes-api/configure-aggregation-layer/">aggregation layer</a> in v1.7 in <code>kube-apiserver</code>:</li>
+</ul>
+
+<pre><code>--requestheader-client-ca-file=&lt;path to aggregator CA cert&gt;
+--requestheader-allowed-names=aggregator
+--requestheader-extra-headers-prefix=X-Remote-Extra-
+--requestheader-group-headers=X-Remote-Group
+--requestheader-username-headers=X-Remote-User
+--proxy-client-cert-file=&lt;path to aggregator proxy cert&gt;
+--proxy-client-key-file=&lt;path to aggregator proxy key&gt;
+</code></pre>
+
+<ul>
+<li>Configure controller manager to use the metrics APIs via their REST clients by these settings in <code>kube-controller-manager</code>:</li>
+</ul>
+
+<pre><code>--horizontal-pod-autoscaler-use-rest-clients=true
+--horizontal-pod-autoscaler-sync-period=10s
+--master=&lt;apiserver-address&gt;:&lt;port&gt; //port should be 8080
+</code></pre>
+
+<p>The <code>horizontal-pod-autoscaler-sync-period</code> parameter set the interval time (in second) that the HPA controller synchronizes the number of pods. By default it&#39;s 30s. Sometimes we might want to optimize this parameter to make the HPA controller reacts faster.</p>
+
+<ul>
+<li>The autoscaling for custom metrics is supported in HPA since v1.7 via <code>autoscaling/v2alpha1</code> API. It needs to be enabled by setting the <code>runtime-config</code> in <code>kube-apiserver</code>:</li>
+</ul>
+
+<pre><code>--runtime-config=api/all=true
+</code></pre>
+
+<p>Once the kube-apiserver is configured and up and running, <code>kubectl</code> will auto-discover all API groups. Check it using this below command and you will see the <code>autoscaling/v2alpha1</code> is enabled:</p>
+
+<pre><code>$ kubectl api-versions
+admissionregistration.k8s.io/v1alpha1
+apiextensions.k8s.io/v1beta1
+apiregistration.k8s.io/v1beta1
+apps/v1beta1
+authentication.k8s.io/v1
+authentication.k8s.io/v1beta1
+authorization.k8s.io/v1
+authorization.k8s.io/v1beta1
+autoscaling/v1
+**autoscaling/v2alpha1**
+batch/v1
+batch/v2alpha1
+certificates.k8s.io/v1beta1
+extensions/v1beta1
+networking.k8s.io/v1
+policy/v1beta1
+rbac.authorization.k8s.io/v1alpha1
+rbac.authorization.k8s.io/v1beta1
+settings.k8s.io/v1alpha1
+storage.k8s.io/v1
+storage.k8s.io/v1beta1
+v1
+</code></pre>
+
+<h3>Deploy Prometheus to monitor services</h3>
+
+<p>The Prometheus setup contains a Prometheus operator and a Prometheus instance</p>
+
+<pre><code>$ kubectl create -f $KUBELESS_REPO/manifests/autoscaling/prometheus-operator.yaml
+clusterrole &quot;prometheus-operator&quot; created
+serviceaccount &quot;prometheus-operator&quot; created
+clusterrolebinding &quot;prometheus-operator&quot; created
+deployment &quot;prometheus-operator&quot; created
+
+$ kubectl create -f $KUBELESS_REPO/manifests/autoscaling/sample-prometheus-instance.yaml
+clusterrole &quot;prometheus&quot; created
+serviceaccount &quot;prometheus&quot; created
+clusterrolebinding &quot;prometheus&quot; created
+prometheus &quot;sample-metrics-prom&quot; created
+service &quot;sample-metrics-prom&quot; created
+
+$ kubectl get svc
+NAME                  CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes            10.96.0.1       &lt;none&gt;        443/TCP          6d
+prometheus-operated   None            &lt;none&gt;        9090/TCP         1h
+</code></pre>
+
+<h3>Deploy a custom API server</h3>
+
+<p>When the aggregator enabled and configured properly, one can deploy and register a custom API server that provides the <code>custom-metrics.metrics.k8s.io/v1alpha1</code> API group/version and let the HPA controller queries custom metrics from that.</p>
+
+<p>The custom API server we are using here is basically <a href="https://github.com/directxman12/k8s-prometheus-adapter">a Prometheus adapter</a> which can collect metrics from Prometheus and send to HPA controller via REST queries (that&#39;s why we must configure HPA controller to use REST client via the <code>--horizontal-pod-autoscaler-use-rest-clients</code> flag)</p>
+
+<pre><code>$ kubectl create -f $KUBELESS_REPO/manifests/autoscaling/custom-metrics.yaml
+namespace &quot;custom-metrics&quot; created
+serviceaccount &quot;custom-metrics-apiserver&quot; created
+clusterrolebinding &quot;custom-metrics:system:auth-delegator&quot; created
+rolebinding &quot;custom-metrics-auth-reader&quot; created
+clusterrole &quot;custom-metrics-read&quot; created
+clusterrolebinding &quot;custom-metrics-read&quot; created
+deployment &quot;custom-metrics-apiserver&quot; created
+service &quot;api&quot; created
+apiservice &quot;v1alpha1.custom-metrics.metrics.k8s.io&quot; created
+clusterrole &quot;custom-metrics-server-resources&quot; created
+clusterrolebinding &quot;hpa-controller-custom-metrics&quot; created
+</code></pre>
+
+<p>At this step, the custom API server is deployed and registered to API aggregator, so we can see it:</p>
+
+<pre><code>$ kubectl api-versions
+admissionregistration.k8s.io/v1alpha1
+apiextensions.k8s.io/v1beta1
+apiregistration.k8s.io/v1beta1
+apps/v1beta1
+authentication.k8s.io/v1
+authentication.k8s.io/v1beta1
+authorization.k8s.io/v1
+authorization.k8s.io/v1beta1
+autoscaling/v1
+autoscaling/v2alpha1
+batch/v1
+batch/v2alpha1
+certificates.k8s.io/v1beta1
+**custom-metrics.metrics.k8s.io/v1alpha1**
+extensions/v1beta1
+monitoring.coreos.com/v1alpha1
+networking.k8s.io/v1
+policy/v1beta1
+rbac.authorization.k8s.io/v1alpha1
+rbac.authorization.k8s.io/v1beta1
+settings.k8s.io/v1alpha1
+storage.k8s.io/v1
+storage.k8s.io/v1beta1
+v1
+
+$ kubectl get po -n custom-metrics
+NAME                                        READY     STATUS    RESTARTS   AGE
+custom-metrics-apiserver-2956926076-wcgmw   1/1       Running   0          1h
+
+$ kubectl get --raw /apis/custom-metrics.metrics.k8s.io/v1alpha1
+{&quot;kind&quot;:&quot;APIResourceList&quot;,&quot;apiVersion&quot;:&quot;v1&quot;,
+&quot;groupVersion&quot;:&quot;custom-metrics.metrics.k8s.io/v1alpha1&quot;,&quot;resources&quot;:[]}
+</code></pre>
+
+<h3>Deploy a sample app</h3>
+
+<p>Now we can deploy a sample app and sample HPA rule to do the autoscale with <code>http_requests</code> metric collected and exposed via Prometheus.</p>
+
+<pre><code class="console">$ cat $KUBELESS_REPO/manifests/autoscaling/sample-metrics-app.yaml
+...
+---
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v2alpha1
+metadata:
+  name: sample-metrics-app-hpa
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: sample-metrics-app
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Object
+    object:
+      target:
+        kind: Service
+        name: sample-metrics-app
+      metricName: http_requests
+      targetValue: 100
+
+$ kubectl create -f $KUBELESS_REPO/manifests/autoscaling/sample-metrics-app.yaml
+deployment &quot;sample-metrics-app&quot; created
+service &quot;sample-metrics-app&quot; created
+servicemonitor &quot;sample-metrics-app&quot; created
+horizontalpodautoscaler &quot;sample-metrics-app-hpa&quot; created
+
+$ kubectl get hpa
+</code></pre>
+
+<p>Try to increase some loads by hitting the sample app service, then you can see the HPA scales it up.</p>
+
+<h2>Autoscaling on GKE</h2>
+
+<p>Let&#39;s say you are running Kubeless on GKE. At this moment you can only do autoscaling with default metric (CPU). For custom metrics, GKE team says that it will be supported from GKE 1.9+. So stay tuned.</p>
+
+<h3>Further reading</h3>
+
+<p><a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/custom-metrics-api.md">Custom Metrics API</a></p>
+
+<p><a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-custom-metrics">Support for custom metrics</a></p>
+
+</div>
+</div>
+</main>
+<div class='margin-t-giant'>
+<div class='Footer'>
+<div class='container padding-h-big padding-v-bigger'>
+<div class='Footer__Border padding-t-big'>
+<div class='row collapse-b-phone-land'>
+<div class='col-6'>
+<h4 class='inverse margin-reset'>
+<img src="/assets/images/logo-white.svg" alt="Kubeless logo" class="Footer__Logo" />
+</h4>
+<p class='type-color-iron type-small margin-reset'>
+© Kubeless 2018 | All Rights Reserved.
+</p>
+</div>
+<div class='col-6 text-r'>
+<a href="https://github.com/kubeless" class="margin-l-small"><img src="/assets/images/social/github.svg" alt="See the Github Profile of the Kubeless project" />
+</a></div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</body>
+</html>
+<script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js'></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
